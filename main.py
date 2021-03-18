@@ -1,5 +1,6 @@
-from decoder import decode
+from decoder import Decoder
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    decode('sample_data/_2207_noaa17.wav')
+    decoder = Decoder('sample_data/example2.wav')
+    decoder.decode(show_img=True, outfile="Result.jpg")
