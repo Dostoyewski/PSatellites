@@ -22,6 +22,11 @@ class Decoder(object):
         self.image = None
 
     def resample(self, out_filename=None):
+        """
+        Resamples .wav for NOAA frequency
+        :param out_filename:
+        :return:
+        """
         if self.fs != FREQ:
             coef = FREQ / self.fs
             samples = int(coef * len(self.signal))
@@ -31,6 +36,12 @@ class Decoder(object):
                 wav.write(out_filename, FREQ, self.signal)
 
     def decode(self, outfile=None, show_img=False):
+        """
+        Decodes signal to img
+        :param outfile: name of image to save
+        :param show_img: if True will show image
+        :return:
+        """
         hilbert = signal.hilbert(self.signal)
         filtered = signal.medfilt(np.abs(hilbert), 5)
         reshaped = filtered.reshape(len(filtered) // 5, 5)
@@ -55,13 +66,15 @@ class Decoder(object):
         return data.astype(np.uint8)
 
     def _reshape(self, signal):
-        '''
+        """
         Find sync frames and reshape the 1D signal into a 2D image.
         Finds the sync A frame by looking at the maximum values of the cross
         correlation between the signal and a hardcoded sync A frame.
         The expected distance between sync A frames is 2080 samples, but with
         small variations because of Doppler effect.
-        '''
+        :param signal:
+        :return:
+        """
         # sync frame to find: seven impulses and some black pixels (some lines
         # have something like 8 black pixels and then white ones)
         syncA = [0, 128, 255, 128] * 7 + [0] * 7
